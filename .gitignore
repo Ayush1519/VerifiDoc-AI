@@ -1,0 +1,11 @@
+# Node dependencies
+verifidoc-ai/frontend/node_modules/
+verifidoc-ai/frontend/.next/
+
+# Python cache and environment
+verifidoc-ai/backend/__pycache__/
+verifidoc-ai/backend/*.pyc
+*.env
+
+# IDE
+.vscode/

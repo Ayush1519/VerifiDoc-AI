@@ -1,0 +1,19 @@
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+pydantic==2.8.0
+
+# Document processing
+pdfplumber==0.11.0
+PyMuPDF==1.24.11
+Pillow==10.4.0
+
+# OCR
+pytesseract==0.3.10
+
+# Computer Vision & ML
+opencv-python==4.9.0.80
+numpy==2.1.0
+
+# Utilities
+python-dotenv==1.0.1

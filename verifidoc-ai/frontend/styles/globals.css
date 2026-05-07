@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --accent:  #00e5ff;
+  --warn:    #ffb300;
+  --danger:  #ff3b3b;
+  --safe:    #00e676;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #050508;
+  color: #e2e2f0;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: #0d0d14; }
+::-webkit-scrollbar-thumb  { background: #1e1e30; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #00e5ff44; }
+
+/* Animated scan-line overlay on the entire UI */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,229,255,0.012) 2px,
+    rgba(0,229,255,0.012) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Glowing border utility */
+.border-glow {
+  border: 1px solid rgba(0,229,255,0.3);
+  box-shadow: 0 0 15px rgba(0,229,255,0.08), inset 0 0 15px rgba(0,229,255,0.02);
+}
+
+.border-glow-warn {
+  border: 1px solid rgba(255,179,0,0.4);
+  box-shadow: 0 0 15px rgba(255,179,0,0.08);
+}
+
+.border-glow-danger {
+  border: 1px solid rgba(255,59,59,0.4);
+  box-shadow: 0 0 20px rgba(255,59,59,0.12);
+}
+
+.border-glow-safe {
+  border: 1px solid rgba(0,230,118,0.3);
+  box-shadow: 0 0 15px rgba(0,230,118,0.08);
+}
+
+/* Risk score ring */
+.risk-ring {
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #12121c 25%, #1e1e30 50%, #12121c 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Typing cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--accent);
+}
