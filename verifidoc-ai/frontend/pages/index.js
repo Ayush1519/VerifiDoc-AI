@@ -2,7 +2,7 @@ import { useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Activity, Layers, ChevronRight, RotateCcw } from "lucide-react";
+import { Shield, Activity, Layers, ChevronRight, RotateCcw, AlertTriangle } from "lucide-react";
 
 import FileUpload  from "../components/FileUpload";
 import RiskDashboard from "../components/RiskDashboard";
@@ -249,16 +249,31 @@ export default function Home() {
                     key="error"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-xl border border-danger/30 bg-[rgba(255,59,59,0.06)] p-6 text-center"
+                    className="rounded-xl border border-danger/40 bg-gradient-to-br from-[rgba(255,59,59,0.12)] to-[rgba(255,59,59,0.04)] p-8 text-center backdrop-blur-sm shadow-lg"
                   >
-                    <p className="text-danger font-body mb-2">Verification failed</p>
-                    <p className="text-dim text-sm font-mono">{apiError}</p>
-                    <button
-                      onClick={reset}
-                      className="mt-4 px-4 py-2 rounded-lg text-sm font-mono text-accent border border-accent/30 hover:bg-accent/10 transition-colors"
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.1 }}
+                      className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-danger/20 mb-6 border border-danger/30"
                     >
-                      Try again
-                    </button>
+                      <AlertTriangle className="w-8 h-8 text-danger" />
+                    </motion.div>
+                    <h3 className="text-danger font-sans font-bold text-lg mb-2">Verification Failed</h3>
+                    <p className="text-dim text-sm font-body mb-6 leading-relaxed">
+                      {apiError.includes('404') 
+                        ? "The verification service is currently unavailable. Please ensure the backend API is running."
+                        : apiError}
+                    </p>
+                    <motion.button
+                      onClick={reset}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold text-void bg-gradient-to-r from-accent to-accent/80 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Try Again
+                    </motion.button>
                   </motion.div>
                 )}
 
@@ -271,28 +286,29 @@ export default function Home() {
                   >
                     {/* Actions bar */}
                     <div className="flex items-center justify-between">
-                      <div className="flex gap-1 p-1 rounded-lg bg-panel border border-border">
+                      <div className="flex gap-1 p-1.5 rounded-lg bg-panel border border-border/60 shadow-sm">
                         {["report", "fields"].map((tab) => (
                           <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-3 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-all ${
+                            className={`px-4 py-2 rounded-md text-xs font-mono uppercase tracking-wider transition-all ${
                               activeTab === tab
-                                ? "bg-accent text-void font-bold"
-                                : "text-dim hover:text-text"
+                                ? "bg-gradient-to-r from-accent to-accent/80 text-void font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]"
+                                : "text-dim hover:text-accent"
                             }`}
                           >
-                            {tab}
+                            {tab === "report" ? "Report" : "Fields"}
                           </button>
                         ))}
                       </div>
-                      <button
+                      <motion.button
                         onClick={reset}
-                        className="flex items-center gap-1.5 text-xs font-mono text-dim hover:text-accent transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        className="flex items-center gap-1.5 text-xs font-mono text-dim hover:text-accent transition-colors px-3 py-2 rounded-lg hover:bg-accent/10"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
                         New scan
-                      </button>
+                      </motion.button>
                     </div>
 
                     <RiskDashboard result={result} />
