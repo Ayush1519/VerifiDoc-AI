@@ -81,13 +81,16 @@ function RecommendationItem({ text, index }) {
 export default function AnomalyReport({ result }) {
   const [showMeta, setShowMeta] = useState(false);
 
-  const criticalCount = result.anomalies.filter((a) => a.severity === "CRITICAL").length;
-  const highCount     = result.anomalies.filter((a) => a.severity === "HIGH").length;
-  const medCount      = result.anomalies.filter((a) => a.severity === "MEDIUM").length;
-  const lowCount      = result.anomalies.filter((a) => a.severity === "LOW").length;
+  const anomalies = Array.isArray(result.anomalies) ? result.anomalies : [];
+  const metadataFlags = Array.isArray(result.metadata_flags) ? result.metadata_flags : [];
+
+  const criticalCount = anomalies.filter((a) => a.severity === "CRITICAL").length;
+  const highCount     = anomalies.filter((a) => a.severity === "HIGH").length;
+  const medCount      = anomalies.filter((a) => a.severity === "MEDIUM").length;
+  const lowCount      = anomalies.filter((a) => a.severity === "LOW").length;
 
   // Sort: CRITICAL first
-  const sortedAnomalies = [...result.anomalies].sort((a, b) => {
+  const sortedAnomalies = [...anomalies].sort((a, b) => {
     const order = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
     return (order[a.severity] ?? 9) - (order[b.severity] ?? 9);
   });
@@ -95,7 +98,7 @@ export default function AnomalyReport({ result }) {
   return (
     <div className="space-y-6">
       {/* Summary chips */}
-      {result.anomalies.length > 0 && (
+      {anomalies.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {criticalCount > 0 && (
             <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[rgba(255,59,59,0.1)] text-[#ff3b3b] border border-[rgba(255,59,59,0.3)]">
@@ -141,14 +144,14 @@ export default function AnomalyReport({ result }) {
       )}
 
       {/* Metadata flags */}
-      {result.metadata_flags.length > 0 && (
+      {metadataFlags.length > 0 && (
         <div className="rounded-lg border border-border bg-panel overflow-hidden">
           <button
             onClick={() => setShowMeta(!showMeta)}
             className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-surface transition-colors"
           >
             <span className="text-dim text-sm font-mono uppercase tracking-wider">
-              Metadata flags ({result.metadata_flags.length})
+              Metadata flags ({metadataFlags.length})
             </span>
             {showMeta ? (
               <ChevronUp className="w-4 h-4 text-muted" />
@@ -158,7 +161,7 @@ export default function AnomalyReport({ result }) {
           </button>
           {showMeta && (
             <div className="px-4 pb-4 space-y-1.5">
-              {result.metadata_flags.map((flag, i) => (
+              {metadataFlags.map((flag, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs font-mono text-warn">
                   <span className="text-warn/50">▸</span>
                   {flag}
@@ -170,7 +173,7 @@ export default function AnomalyReport({ result }) {
       )}
 
       {/* Recommendations */}
-      {result.recommendations.length > 0 && (
+      {(result.recommendations && result.recommendations.length > 0) && (
         <div className="rounded-lg border border-border bg-panel p-5">
           <h3 className="text-dim text-xs font-mono uppercase tracking-widest mb-4">
             Underwriter Recommendations

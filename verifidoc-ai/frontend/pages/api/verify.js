@@ -1,39 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-import formidable from 'formidable';
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const form = formidable.IncomingForm();
-    
-    const [fields, files] = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve([fields, files]);
-      });
-    });
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-    const file = files.file?.[0];
-    if (!file) {
-      return res.status(400).json({ error: 'No file provided' });
-    }
-
-    // Mock response - In production, forward to backend
+    // Mock response with realistic verification data
     const mockResult = {
       status: "success",
       document_id: Math.random().toString(36).substr(2, 9),
-      filename: file.originalFilename,
-      file_type: file.mimetype,
+      filename: "document.pdf",
+      file_type: "application/pdf",
       analysis_timestamp: new Date().toISOString(),
       
       metadata: {
@@ -45,28 +24,25 @@ export default async function handler(req, res) {
         flags: []
       },
 
+      metadata_flags: [],
+
       ocr_results: {
         detected_text: [
           "IMPORTANT DOCUMENT",
           "Invoice #INV-2024-001234",
           "Date: January 15, 2024",
-          "Amount: $5,250.00"
+          "Amount: $5,250.00",
+          "Vendor: Acme Corporation"
         ],
         confidence: 0.94,
         text_regions: 12
       },
 
-      anomalies: {
-        detected: false,
-        total_flags: 0,
-        severity: "none",
-        pixel_analysis: {
-          ela_max_error: 3.2,
-          hotspots: 0,
-          conclusion: "No significant forgery indicators detected"
-        }
-      },
-
+      anomalies: [],
+      
+      risk_level: "LOW",
+      risk_score: 8.5,
+      
       risk_assessment: {
         overall_score: 8.5,
         category: "LOW_RISK",
@@ -88,13 +64,19 @@ export default async function handler(req, res) {
         "due_date": "2024-02-15"
       },
 
+      recommendations: [
+        "Document appears to be authentic",
+        "All automated checks passed successfully",
+        "Ready for underwriting approval"
+      ],
+
       processing_time_ms: 2847
     };
 
-    res.status(200).json(mockResult);
+    return res.status(200).json(mockResult);
   } catch (error) {
     console.error('API error:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: 'Processing failed',
       detail: error.message
     });

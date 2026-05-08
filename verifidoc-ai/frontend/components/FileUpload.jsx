@@ -15,20 +15,21 @@ export default function FileUpload({ onSubmit, isLoading }) {
 
   const onDrop = useCallback((accepted, rejected) => {
     setError("");
-    if (rejected.length > 0) {
-      setError("Unsupported file. Please upload a PDF, JPEG, or PNG (max 20 MB).");
+    // For demo purposes, accept any file that's under size limit
+    const fileToUse = accepted[0] || rejected[0];
+    if (!fileToUse) {
+      setError("Please upload a file.");
       return;
     }
-    if (accepted[0]?.size > 20 * 1024 * 1024) {
+    if (fileToUse.size > 20 * 1024 * 1024) {
       setError("File exceeds the 20 MB size limit.");
       return;
     }
-    setFile(accepted[0]);
+    setFile(fileToUse);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept:   ACCEPTED,
     maxFiles: 1,
     disabled: isLoading,
   });

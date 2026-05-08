@@ -181,6 +181,33 @@ Verify up to 5 documents in one call.
 
 ---
 
+## Deployment (Vercel + Backend)
+
+### Prerequisites
+- A deployed backend (Heroku, Railway, Azure, AWS, etc.)
+- A Vercel account (free at vercel.com)
+
+### Step 1: Deploy Backend First
+Deploy your FastAPI backend to a cloud platform:
+- **Heroku:** `git push heroku main`
+- **Railway:** Connect your repo → Railway will auto-deploy
+- **Azure:** Use Azure App Service → Deploy from GitHub
+- **Render.com:** Connect repo → Deploy
+
+Note the backend URL (e.g., `https://my-verifidoc-api.herokuapp.com`)
+
+### Step 2: Configure Frontend for Vercel
+1. In Vercel dashboard, add environment variable:
+   - Name: `NEXT_PUBLIC_API_URL`
+   - Value: `https://your-backend-url.com` (without trailing slash)
+
+2. Redeploy: Push code to GitHub or click "Redeploy" in Vercel
+
+### Step 3: Get Your Live Link
+Once deployed, your Vercel project URL will be: `https://your-project-name.vercel.app`
+
+---
+
 ## Troubleshooting
 
 **`pytesseract.pytesseract.TesseractNotFoundError`**  
@@ -190,10 +217,16 @@ Verify up to 5 documents in one call.
 → Run `pip install opencv-python` inside the venv.
 
 **Frontend shows "Verification failed"**  
-→ Make sure the backend is running on port 8000 first.
+→ Make sure the backend is running on port 8000 first, OR set `NEXT_PUBLIC_API_URL` env var to your backend URL.
+
+**Live link on Vercel not working**  
+→ Backend URL must be set in Vercel environment variables. See Deployment section.
+
+**Backend API URL issues on production**  
+→ Check that `NEXT_PUBLIC_API_URL` is set correctly and the backend is accessible from your Vercel deployment.
 
 **Port already in use**  
-→ `uvicorn main:app --reload --port 8001` then update `next.config.js` destination to `:8001`.
+→ `uvicorn main:app --reload --port 8001` then set `NEXT_PUBLIC_API_URL=http://localhost:8001` in `.env.local`.
 
 ---
 

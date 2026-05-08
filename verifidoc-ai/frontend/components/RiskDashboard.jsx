@@ -129,12 +129,13 @@ function AnomalyCard({ anomaly, index }) {
 }
 
 export default function RiskDashboard({ result }) {
+  const anomaliesArray = Array.isArray(result.anomalies) ? result.anomalies : [];
   const cfg   = LEVEL_CONFIG[result.risk_level] || LEVEL_CONFIG.LOW;
   const RiskIcon = cfg.icon;
-  const criticalAnomalies = (result.anomalies || []).filter(a => a.severity === "CRITICAL");
-  const highAnomalies = (result.anomalies || []).filter(a => a.severity === "HIGH");
-  const mediumAnomalies = (result.anomalies || []).filter(a => a.severity === "MEDIUM");
-  const lowAnomalies = (result.anomalies || []).filter(a => a.severity === "LOW");
+  const criticalAnomalies = anomaliesArray.filter(a => a.severity === "CRITICAL");
+  const highAnomalies = anomaliesArray.filter(a => a.severity === "HIGH");
+  const mediumAnomalies = anomaliesArray.filter(a => a.severity === "MEDIUM");
+  const lowAnomalies = anomaliesArray.filter(a => a.severity === "LOW");
 
   return (
     <motion.div

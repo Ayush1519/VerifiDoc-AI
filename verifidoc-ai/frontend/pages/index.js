@@ -92,12 +92,11 @@ export default function Home() {
     }, 700);
 
     try {
+      // Send file for mock API (the API doesn't parse it, just returns mock data)
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await axios.post("/api/verify", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.post("/api/verify", formData);
       clearInterval(stageTimer);
       setLoadStage(STAGES.length - 1);
       await new Promise((r) => setTimeout(r, 400));
